@@ -1,0 +1,24 @@
+<div class="invitation-form" *ngIf="invitation">
+  <h1>
+    {{ invitation.question }}
+  </h1>
+
+  <p>
+    Poll: #{{ invitation.invitationId }}<br />
+  </p>
+
+  <form [formGroup]="invitationForm" (ngSubmit)="onSubmit()">
+
+    <div *ngFor="let proposal of invitation.proposals">
+      <label>
+        <input type="radio" [value]="proposal.proposalId" formControlName="proposalId">
+        <span>{{ proposal.text }}</span>
+      </label>
+    </div>
+
+    <div>
+      <button type="submit" [disabled]="!invitationForm.valid">Vote</button>
+    </div>
+
+  </form>
+</div>

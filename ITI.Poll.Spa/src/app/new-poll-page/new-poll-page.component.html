@@ -1,0 +1,58 @@
+<div class="new-poll-page">
+  <form [formGroup]="newPollForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="errors" class="alert alert-danger">
+      <div *ngFor="let error of errors">
+        {{ error }}
+      </div>
+    </div>
+
+    <div *ngIf="question.invalid && question.touched" class="alert alert-danger">
+      <div *ngIf="question.errors.required">
+        Question is required.
+      </div>
+    </div>
+    <div>
+      <label>Question: *</label>
+      <input type="text" formControlName="question" required />
+    </div>
+
+    <div formArrayName="proposals">
+      <div *ngFor="let proposal of proposals.controls; let i=index">
+        <div *ngIf="proposal.invalid && proposal.touched" class="alert alert-danger">
+          <div *ngIf="proposal.errors.required">
+            Proposal is required.
+          </div>
+        </div>
+        <div>
+          <label>Proposal: *</label>
+          <input type="text" [formControlName]="i" required />
+          <button *ngIf="proposals.controls.length > 2" (click)="deleteProposal(i)">Delete</button>
+        </div>
+      </div>
+      <button type="button" (click)="addProposal()">Add proposal</button>
+    </div>
+
+    <div formArrayName="guests">
+      <div *ngFor="let guest of guests.controls; let i=index">
+        <div *ngIf="guest.invalid && guest.touched" class="alert alert-danger">
+          <div *ngIf="guest.errors.required">
+            Guest is required.
+          </div>
+          <div *ngIf="guest.errors.invalidNickname">
+            Unknown user.
+          </div>
+        </div>
+        <div>
+          <label>Guest: *</label>
+          <input type="text" [formControlName]="i" required />
+          <button *ngIf="guests.controls.length > 1" (click)="deleteGuest(i)">Delete</button>
+        </div>
+      </div>
+      <button type="button" (click)="addGuest()">Add guest</button>
+    </div>
+    
+    <div>
+      <button type="submit" [disabled]="!newPollForm.valid">Create</button>
+    </div>
+  </form>
+</div>

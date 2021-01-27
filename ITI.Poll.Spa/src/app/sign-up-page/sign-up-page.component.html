@@ -1,0 +1,52 @@
+<div class="signup-page">
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="errorMessages && errorMessages.length > 0" class="alert alert-danger">
+      <div *ngFor="let errorMessage of errorMessages">
+        {{ errorMessage }}
+      </div>
+    </div>
+
+    <div *ngIf="email.invalid && email.touched" class="alert alert-danger">
+      <div *ngIf="email.errors.required">
+        Login is required.
+      </div>
+      <div *ngIf="email.errors.email">
+        Invalid email.
+      </div>
+    </div>
+    <div>
+      <label>Email: *</label>
+      <input type="email" formControlName="email" required />
+    </div>
+
+    <div *ngIf="nickname.invalid && nickname.touched" class="alert alert-danger">
+      <div *ngIf="nickname.errors.required">
+        Nickname is required.
+      </div>
+    </div>
+    <div>
+      <label>Nickname: *</label>
+      <input type="text" formControlName="nickname" required />
+    </div>
+
+    <div *ngIf="password.invalid && password.touched" class="alert alert-danger">
+      <div *ngIf="password.errors.required">
+        Password is required.
+      </div>
+      <div *ngIf="password.errors.minlength">
+        Password must contain at least 6 characters.
+      </div>
+    </div>
+    <div>
+      <label>Password: *</label>
+      <input type="password" formControlName="password" required />
+    </div>
+    <div>
+      <button type="submit" [disabled]="!signupForm.valid">Sign Up</button>
+    </div>
+  </form>
+
+  <div>
+    <a routerLink="/login">Login</a>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+schema {
+  query: PollQuery
+  mutation: PollMutation
+}
+
+type Answer {
+  answerId: ID!
+  text: String!
+  votesCount: Int!
+}
+
+type Authentication {
+  user: User!
+  accessToken: String!
+}
+
+type CheckNicknamePayload {
+  errors: [Error!]!
+  guest: Guest
+}
+
+type Error {
+  type: String!
+  message: String!
+}
+
+type Guest {
+  guestId: ID!
+  nickname: String!
+}
+
+type Invitation {
+  invitationId: ID!
+  question: String!
+  proposals: [Proposal!]!
+}
+
+type InvitationPayload {
+  errors: [Error!]!
+  invitation: Invitation
+}
+
+type Poll {
+  pollId: ID!
+  question: String!
+  answers: [Answer!]!
+  guestCount: Int!
+}
+
+type PollMutation {
+  user: UserMutation!
+  poll: PollMutationRoot!
+}
+
+type PollMutationRoot {
+  createPoll(poll: PollInput!): PollPayload!
+  vote(vote: VoteInput!): VotePayload!
+}
+
+type PollPayload {
+  errors: [Error!]!
+  poll: Poll
+}
+
+type PollQuery {
+  me: User!
+  checkNickname(nickname: String!): CheckNicknamePayload!
+  poll(pollId: ID!): PollPayload!
+  invitation(invitationId: ID!): InvitationPayload!
+}
+
+type Proposal {
+  proposalId: ID!
+  text: String!
+}
+
+type SignInPayload {
+  errors: [Error!]!
+  authentication: Authentication
+}
+
+type User {
+  userId: ID!
+  email: String!
+  nickname: String!
+  polls: [Poll!]!
+  invitations: [Invitation!]!
+}
+
+type UserMutation {
+  signUp(login: SignUpInput!): SignInPayload!
+  signIn(login: SignInInput!): SignInPayload!
+}
+
+type VotePayload {
+  errors: [Error!]!
+}
+
+input PollInput {
+  question: String!
+  proposals: [String!]!
+  guests: [String!]!
+}
+
+input SignInInput {
+  email: String!
+  password: String!
+}
+
+input SignUpInput {
+  email: String!
+  nickname: String!
+  password: String!
+}
+
+input VoteInput {
+  pollId: ID!
+  proposalId: ID!
+}

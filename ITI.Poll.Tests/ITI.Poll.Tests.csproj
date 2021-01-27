@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ITI.Poll.Infrastructure\ITI.Poll.Infrastructure.csproj" />
+    <ProjectReference Include="..\ITI.Poll.Model\ITI.Poll.Model.csproj" />
+    <ProjectReference Include="..\ITI.Poll.AspNetCore\ITI.Poll.AspNetCore.csproj" />
+  </ItemGroup>
+
+</Project>

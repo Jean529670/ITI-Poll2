@@ -1,0 +1,31 @@
+<div class="me">
+  <div *ngIf="me">
+    <div class="my-1">
+      My polls:
+      <div *ngIf="me.polls.length > 0 else noPoll">
+        <p *ngFor="let poll of me.polls">
+          <a [routerLink]="['/poll', poll.pollId]">{{ poll.question }}</a>
+        </p>
+      </div>
+      <ng-template #noPoll>
+        <p>
+          You don't have any poll.
+        </p>
+      </ng-template>
+    </div>
+
+    <div class="my-1">
+      My invitations:
+      <div *ngIf="me.invitations.length > 0 else noInvitation">
+        <p *ngFor="let invitation of me.invitations">
+          <a [routerLink]="['/invitation', invitation.invitationId]">{{ invitation.question }}</a>
+        </p>
+      </div>
+      <ng-template #noInvitation>
+        <p>
+          You don't have any invitation.
+        </p>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PackageReference Update="dbup-sqlserver" Version="4.5.0" />
+    <PackageReference Update="FluentAssertions" Version="5.10.3" />
+    <PackageReference Update="HotChocolate.AspNetCore" Version="11.0.8" />
+    <PackageReference Update="HotChocolate.AspNetCore.Authorization" Version="11.0.8" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Update="NSubstitute" Version="4.2.2" />
+    <PackageReference Update="NUnit" Version="3.13.0" />
+    <PackageReference Update="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Update="Polly" Version="7.2.1" />
+    <PackageReference Update="SpecFlow" Version="3.6.23" />
+    <PackageReference Update="SpecFlow.Tools.MsBuild.Generation" Version="3.6.23" />
+    <PackageReference Update="SpecFlow.NUnit" Version="3.6.23" />
+    <PackageReference Update="SpecFlow.NUnit.Runners" Version="3.6.23" />
+  </ItemGroup>
+</Project>

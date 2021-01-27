@@ -1,0 +1,16 @@
+<div class="poll">
+  <div *ngIf="poll">
+    <h1>{{ poll.question }}</h1>
+
+    <p>Poll: #{{ poll.pollId }}</p>
+
+    <div class="my-1">
+      <p>Answers: ({{ answers() }}/{{ poll.guestCount }})</p>
+      <ul>
+        <li *ngFor="let answer of poll.answers">
+          {{ answer.text }}: {{ answer.votesCount }} votes
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

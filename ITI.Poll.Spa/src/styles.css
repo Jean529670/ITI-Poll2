@@ -1,0 +1,42 @@
+@import 'modern-normalize/modern-normalize.css';
+
+:root {
+  --background-color: hsl(210, 50%, 98%);
+  --main-color: hsl(210, 100%, 50%);
+  --dark-text-color: hsl(210, 50%, 5%);
+  --light-text-color: hsl(210, 50%, 95%);
+  --lighter-text-color: hsl(210, 40%, 98%);
+  --light-gray: hsl(210, 10%, 60%);
+  --lighter-gray: hsl(210, 10%, 95%);
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--dark-text-color);
+}
+
+p, h1, h2, h3, h4, h5 {
+  margin: 0;
+}
+
+a {
+  color: var(--dark-text-color);
+}
+
+ul {
+  margin: 0;
+}
+
+.m-1 {
+  margin: 1em;
+}
+
+.mx-1 {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.my-1 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}

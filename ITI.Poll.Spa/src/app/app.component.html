@@ -1,0 +1,21 @@
+<div class="app">
+  <header class="app__header">
+    <nav class="app__nav">
+      <ul>
+        <li><a routerLink="/home">ITI-Poll</a></li>
+        <li *ngIf="isAuthenticated$ | async else loginBlock" class="last">
+          {{ email$ | async }}
+        </li>
+        <ng-template #loginBlock>
+          <li class="last">
+            <a routerLink="/login">Login</a>
+          </li>
+        </ng-template>
+      </ul>
+    </nav>
+  </header>
+  <main class="app__main">
+    <router-outlet></router-outlet>
+  </main>
+  <footer class="app__footer">&copy; ITI-Poll 2020</footer>
+</div>
