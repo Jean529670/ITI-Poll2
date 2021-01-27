@@ -11,6 +11,39 @@ namespace ITI.Poll.Infrastructure.Tests.Integration
     public class PollRepositoryTests
     {
         [Test]
+        public async Task create_poll()
+        {
+            using (PollContext pollContext = TestHelpers.CreatePollContext())
+            {
+                PollContextAccessor pollContextAccessor = new PollContextAccessor(pollContext);
+                PollRepository sut = new PollRepository(pollContextAccessor);
+
+                // We should create user for create poll associated with this user
+                UserRepository userRepository = new UserRepository(pollContextAccessor);
+                string email = $"{Guid.NewGuid()}@test.org";
+                string nickname = $"Test-{Guid.NewGuid()}";
+                User user = new User(0, email, nickname, "hash", false);
+                Result userCreated = await userRepository.Create(user);
+
+                Model.Poll poll = new Model.Poll(0, user.UserId, "Question?", false);
+
+                Result creationStatus = await sut.Create(poll);
+
+                userCreated.IsSuccess.Should().BeTrue();
+                creationStatus.IsSuccess.Should().BeTrue();
+                Result<Model.Poll> foundPoll = await sut.FindById(poll.PollId);
+                foundPoll.IsSuccess.Should().BeTrue();
+                foundPoll.Value.AuthorId.Should().Be(poll.AuthorId);
+                foundPoll.Value.PollId.Should().Be(poll.PollId);
+                foundPoll.Value.Question.Should().Be(poll.Question);
+                foundPoll.Value.IsDeleted.Should().BeFalse();
+
+                await TestHelpers.PollService.DeletePoll(pollContext, sut, poll.PollId);
+                await TestHelpers.UserService.DeleteUser(pollContext, userRepository, sut, user.UserId);
+            }
+        }
+
+        [Test]
         public async Task create_guest()
         {
             using (PollContext pollContext = TestHelpers.CreatePollContext())
