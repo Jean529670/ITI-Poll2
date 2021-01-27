@@ -44,6 +44,66 @@ namespace ITI.Poll.Model.Tests.Unit
             sut.Proposals.Should().BeEquivalentTo(new[] { p2, p3, p1 });
         }
 
+        [Test]
+        public void add_guest_to_poll()
+        {
+            Poll sut = CreateSut();
+            var proposal = sut.AddProposal("Proposal");
+            sut.AddGuest(1234, proposal);
+
+            sut.Guests.Should().HaveCount(1);
+        }
+
+        [Test]
+        public void remove_guest_from_pool()
+        {
+            Poll sut = CreateSut();
+            var proposal = sut.AddProposal("Proposal");
+            sut.AddGuest(1234, proposal);
+
+            sut.RemoveGuest(1234);
+
+            sut.Guests.Should().HaveCount(0);
+        }
+
+        [Test]
+        public void answer_with_unknow_guest_should_return_error_message()
+        {
+            Poll sut = CreateSut();
+            var proposal = sut.AddProposal("Proposal");
+
+            var result = sut.Answer(12345, proposal.ProposalId);
+
+            result.ErrorMessage.Should().Be("Unknown guest.");
+        }
+
+        [Test]
+        public void answer_with_unknow_proposal_should_return_error_message()
+        {
+            Poll sut = CreateSut();
+            var proposal = sut.AddProposal("Proposal");
+            sut.AddGuest(1234, proposal);
+
+            var result = sut.Answer(1234, 12345);
+
+            result.ErrorMessage.Should().Be("Unknown proposal.");
+        }
+
+        [Test]
+        public void user_already_aswered_should_return_error_message()
+        {
+            Poll sut = CreateSut();
+            var proposal = sut.AddProposal("Proposal");
+            proposal.ProposalId = 1;
+            sut.AddGuest(1234, proposal);
+
+            sut.Answer(1234, proposal.ProposalId);
+
+            var result = sut.Answer(1234, proposal.ProposalId);
+
+            result.ErrorMessage.Should().Be("This user has already answered.");
+        }
+
         static Poll CreateSut() => new Poll(1234, 4321, "Question?", false);
     }
 }
