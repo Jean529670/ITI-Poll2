@@ -11,14 +11,13 @@ namespace ITI.Poll.Infrastructure.Tests.Integration
     public class PollRepositoryTests
     {
         [Test]
-        public async Task create_poll()
+        public async Task create_guest()
         {
             using (PollContext pollContext = TestHelpers.CreatePollContext())
             {
                 PollContextAccessor pollContextAccessor = new PollContextAccessor(pollContext);
                 PollRepository sut = new PollRepository(pollContextAccessor);
 
-                // We should create user for create poll associated with this user
                 UserRepository userRepository = new UserRepository(pollContextAccessor);
                 string email = $"{Guid.NewGuid()}@test.org";
                 string nickname = $"Test-{Guid.NewGuid()}";
@@ -37,6 +36,67 @@ namespace ITI.Poll.Infrastructure.Tests.Integration
                 foundPoll.Value.PollId.Should().Be(poll.PollId);
                 foundPoll.Value.Question.Should().Be(poll.Question);
                 foundPoll.Value.IsDeleted.Should().BeFalse();
+            }
+            using (PollContext pollContext = TestHelpers.CreatePollContext())
+            {
+
+                PollContextAccessor pollContextAccessor = new PollContextAccessor(pollContext);
+                var pollRepository = new PollRepository(pollContextAccessor);
+                var userRepository = new UserRepository(pollContextAccessor);
+
+
+                string email = $"test-{Guid.NewGuid()}@test.fr";
+                string nickname = $"Test-{Guid.NewGuid()}";
+
+                Result<User> user = await TestHelpers.UserService.CreateUser(userRepository, email, nickname, "validpassword");
+                Result<User> guest2 = await TestHelpers.UserService.CreateUser(userRepository, $"{email}-guest2", $"{nickname}-guest2", "validpassword");
+                Result<User> guest = await TestHelpers.UserService.CreateUser(userRepository, $"{email}-guest", $"{nickname}-guest", "validpassword");
+                var pollDto = new NewPollDto
+                {
+                    AuthorId = user.Value.UserId,
+                    Question = "Test-Question ",
+                    GuestNicknames = new[] { guest.Value.Nickname, guest2.Value.Nickname },
+                    Proposals = new[] { "proposal1", "proposal2" },
+                };
+                var pollCreated = await TestHelpers.PollService.CreatePoll(pollContext, pollRepository, userRepository, pollDto);
+
+                var remove_guest = await TestHelpers.PollService.DeleteGuest(pollRepository, guest2.Value.UserId, pollCreated.Value.PollId);
+                remove_guest.IsSuccess.Should().BeTrue();
+                await TestHelpers.PollService.DeletePoll(pollContext, pollRepository, pollCreated.Value.PollId);
+                await TestHelpers.UserService.DeleteUser(pollContext, userRepository, pollRepository, user.Value.UserId);
+                await TestHelpers.UserService.DeleteUser(pollContext, userRepository, pollRepository, guest.Value.UserId);
+                await TestHelpers.UserService.DeleteUser(pollContext, userRepository, pollRepository, guest2.Value.UserId);
+            }
+        }
+
+        [Test]
+        public async Task guest_add_answer_to_proposal()
+        {
+            using (PollContext pollContext = TestHelpers.CreatePollContext())
+            {
+                PollContextAccessor pollContextAccessor = new PollContextAccessor(pollContext);
+                var pollRepository = new PollRepository(pollContextAccessor);
+                var userRepository = new UserRepository(pollContextAccessor);
+
+                string email = $"test-{Guid.NewGuid()}@coucou.fr";
+                string nickname = $"Test-{Guid.NewGuid()}";
+
+                Result<User> user = await TestHelpers.UserService.CreateUser(userRepository, email, nickname, "validpassword");
+                Result<User> guest = await TestHelpers.UserService.CreateUser(userRepository, $"{email}-guest", $"{nickname}-guest", "validpassword");
+
+                var pollDto = new NewPollDto
+                {
+                    AuthorId = user.Value.UserId,
+                    Question = "Test-Question ",
+                    GuestNicknames = new[] { guest.Value.Nickname },
+                    Proposals = new[] { "proposal1", "proposal2" },
+                };
+                var pollCreated = await TestHelpers.PollService.CreatePoll(pollContext, pollRepository, userRepository, pollDto);
+                var addAnswer = await TestHelpers.PollService.Answer(pollContext, pollRepository, pollCreated.Value.PollId, guest.Value.UserId, pollCreated.Value.Proposals[0].ProposalId);
+                addAnswer.IsSuccess.Should().BeTrue();
+                await TestHelpers.PollService.DeletePoll(pollContext, pollRepository, pollCreated.Value.PollId);
+                await TestHelpers.UserService.DeleteUser(pollContext, userRepository, pollRepository, user.Value.UserId);
+                await TestHelpers.UserService.DeleteUser(pollContext, userRepository, pollRepository, guest.Value.UserId);
             }
         }
     }
