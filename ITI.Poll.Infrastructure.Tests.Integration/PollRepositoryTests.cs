@@ -37,6 +37,9 @@ namespace ITI.Poll.Infrastructure.Tests.Integration
                 foundPoll.Value.PollId.Should().Be(poll.PollId);
                 foundPoll.Value.Question.Should().Be(poll.Question);
                 foundPoll.Value.IsDeleted.Should().BeFalse();
+
+                await TestHelpers.PollService.DeletePoll(pollContext, sut, poll.PollId);
+                await TestHelpers.UserService.DeleteUser(pollContext, userRepository, sut, user.UserId);
             }
         }
     }
