@@ -24,13 +24,29 @@ export class AppPage {
     await passwordElement.sendKeys(password);
   }
 
-  async signUp(): Promise<unknown> {
+  async fillLogIn(email: string, password: string){
+    const inputElements = element.all(by.tagName('input'));
+    const emailElement = inputElements.get(0);
+    const passwordElement = inputElements.get(1);
+
+    await emailElement.sendKeys(email);
+    await passwordElement.sendKeys(password);
+    
+  }
+
+  async signUp(): Promise<unknown>{
     const signUpElement = element(by.tagName('button'));
     await signUpElement.click();
     return browser.waitForAngular();
   }
 
-  async email(): Promise<string> {
+  async logIn() : Promise<unknown>{
+    const logInElement = element(by.tagName('button'));
+    await logInElement.click();
+    return browser.waitForAngular();
+  }
+
+  async email(): Promise<string>{
     return element(by.css('app-root .app__nav ul li.last')).getText();
   }
 }
